@@ -67,6 +67,22 @@ git push origin v0.25.13-test
 
 Check GitHub Actions tab - jobs should run on your self-hosted runner.
 
+## Credential Persistence
+
+The runner stores permanent credentials in `/home/runner/.credentials` after initial registration.
+
+**Container restart** (stop/start in Dokploy):
+- ✅ Credentials persist
+- ✅ No new token needed
+- ✅ Runner reconnects automatically
+
+**Container rebuild** (rebuild image in Dokploy):
+- ❌ Credentials lost
+- ⚠️ Need new registration token
+- Follow steps 1-3 again with fresh token
+
+**Best practice**: Avoid rebuilding unless updating runner software or Dockerfile changes.
+
 ## Network Requirements
 
 **Outbound only** (no incoming ports needed):
@@ -121,9 +137,12 @@ docker volume prune -f
 
 ## Recent Updates
 
-**2025-02-03**: Fixed build dependencies and Docker socket permissions
+**2025-02-03**: Fixed build dependencies, Docker socket permissions, and credential persistence
 - Added Node.js 22 and CorePack to Dockerfile (fixes yarn not found)
 - Added build-essential, clang, llvm, pkg-config, libssl-dev (fixes Rust compilation)
 - Added python3 for node-gyp native builds
 - Fixed Docker socket permissions in entrypoint.sh (automatically adds runner to docker group)
-- **Action required**: Redeploy runner in Dokploy to apply all fixes
+- **Fixed credential persistence**: Runner only registers once, reuses credentials on restart
+  - Registration token only needed for initial setup or container rebuild
+  - Container restarts no longer require new token
+- **Action required**: Redeploy runner in Dokploy with fresh registration token

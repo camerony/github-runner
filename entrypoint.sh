@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-# Cleanup function
+# Cleanup function - only runs on SIGTERM/SIGINT, not on normal restart
 cleanup() {
     echo "Removing runner..."
     ./config.sh remove --token "${RUNNER_TOKEN}"
 }
-trap cleanup EXIT
+trap cleanup SIGTERM SIGINT
 
 # Fix Docker socket permissions
 if [ -S /var/run/docker.sock ]; then
@@ -23,15 +23,20 @@ if [ -S /var/run/docker.sock ]; then
     echo "Added runner user to docker group (GID: $DOCKER_SOCK_GID)"
 fi
 
-# Configure runner
-./config.sh \
-    --url https://github.com/camerony/Affine-custom \
-    --token "${RUNNER_TOKEN}" \
-    --name "${RUNNER_NAME}" \
-    --labels "self-hosted,linux,x64,docker" \
-    --work _work \
-    --unattended \
-    --replace
+# Only configure runner if not already registered
+if [ ! -f ".runner" ]; then
+    echo "Runner not configured, registering..."
+    ./config.sh \
+        --url https://github.com/camerony/Affine-custom \
+        --token "${RUNNER_TOKEN}" \
+        --name "${RUNNER_NAME}" \
+        --labels "self-hosted,linux,x64,docker" \
+        --work _work \
+        --unattended \
+        --replace
+else
+    echo "Runner already configured, skipping registration"
+fi
 
 # Run runner
 ./run.sh
