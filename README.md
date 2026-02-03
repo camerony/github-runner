@@ -118,3 +118,10 @@ docker volume prune -f
 1. Get new token from GitHub
 2. Update `RUNNER_TOKEN` env var in Dokploy
 3. Restart application
+
+## Recent Updates
+
+**2025-02-03**: Fixed yarn not found error
+- Added Node.js 22 and CorePack to Dockerfile
+- Enables yarn for actions/setup-node caching
+- **Action required**: Redeploy runner in Dokploy to apply the fix

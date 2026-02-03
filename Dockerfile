@@ -20,6 +20,13 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
     apt-get install -y docker-ce-cli docker-buildx-plugin && \
     rm -rf /var/lib/apt/lists/*
 
+# Install Node.js and enable yarn via CorePack
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/* && \
+    corepack enable && \
+    corepack prepare yarn@stable --activate
+
 # Create runner user
 RUN useradd -m -s /bin/bash runner && \
     usermod -aG sudo runner && \
