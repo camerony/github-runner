@@ -121,8 +121,9 @@ docker volume prune -f
 
 ## Recent Updates
 
-**2025-02-03**: Fixed build dependencies
+**2025-02-03**: Fixed build dependencies and Docker socket permissions
 - Added Node.js 22 and CorePack to Dockerfile (fixes yarn not found)
 - Added build-essential, clang, llvm, pkg-config, libssl-dev (fixes Rust compilation)
 - Added python3 for node-gyp native builds
+- Fixed Docker socket permissions in entrypoint.sh (automatically adds runner to docker group)
 - **Action required**: Redeploy runner in Dokploy to apply all fixes
