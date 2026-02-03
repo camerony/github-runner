@@ -121,7 +121,8 @@ docker volume prune -f
 
 ## Recent Updates
 
-**2025-02-03**: Fixed yarn not found error
-- Added Node.js 22 and CorePack to Dockerfile
-- Enables yarn for actions/setup-node caching
-- **Action required**: Redeploy runner in Dokploy to apply the fix
+**2025-02-03**: Fixed build dependencies
+- Added Node.js 22 and CorePack to Dockerfile (fixes yarn not found)
+- Added build-essential, clang, llvm, pkg-config, libssl-dev (fixes Rust compilation)
+- Added python3 for node-gyp native builds
+- **Action required**: Redeploy runner in Dokploy to apply all fixes

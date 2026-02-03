@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-# Install dependencies
+# Install dependencies and build tools
 RUN apt-get update && apt-get install -y \
     curl \
     jq \
@@ -9,6 +9,17 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     gnupg \
     lsb-release \
+    build-essential \
+    clang \
+    llvm \
+    pkg-config \
+    libssl-dev \
+    python3 \
+    python3-pip \
+    unzip \
+    zip \
+    file \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Docker CLI and buildx
