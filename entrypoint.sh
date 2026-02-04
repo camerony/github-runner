@@ -8,8 +8,8 @@ cleanup() {
 }
 trap cleanup SIGTERM SIGINT
 
-# Fix Docker socket permissions
-if [ -S /var/run/docker.sock ]; then
+# Fix Docker socket permissions (only on first run)
+if [ -S /var/run/docker.sock ] && [ -z "$DOCKER_GROUP_ACTIVATED" ]; then
     DOCKER_SOCK_GID=$(stat -c '%g' /var/run/docker.sock)
     echo "Docker socket found with GID: $DOCKER_SOCK_GID"
 
@@ -28,6 +28,7 @@ if [ -S /var/run/docker.sock ]; then
 
     # Re-exec this script with the docker group active
     echo "Re-executing script with docker group..."
+    export DOCKER_GROUP_ACTIVATED=1
     exec sg "$DOCKER_GROUP_NAME" "$0" "$@"
 fi
 
