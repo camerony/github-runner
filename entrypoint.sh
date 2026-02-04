@@ -21,6 +21,10 @@ if [ -S /var/run/docker.sock ]; then
     # Add runner user to the docker group
     sudo usermod -aG "$DOCKER_SOCK_GID" runner
     echo "Added runner user to docker group (GID: $DOCKER_SOCK_GID)"
+
+    # Re-exec this script with the docker group active
+    echo "Re-executing script with docker group..."
+    exec sg "$DOCKER_SOCK_GID" "$0" "$@"
 fi
 
 # Only configure runner if not already registered
@@ -39,4 +43,4 @@ else
 fi
 
 # Run runner
-./run.sh
+exec ./run.sh
